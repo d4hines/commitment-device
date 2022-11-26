@@ -1,0 +1,3 @@
+[submodule "breathalyzer"]
+	path = breathalyzer
+	url = git@github.com:marigold-dev/breathalyzer.git
