@@ -18,6 +18,7 @@ let approved_quit =
          Util.originate
            level
            alice.address
+           alice.address
            [bob.address; carol.address]
            None
            stake_amount
@@ -59,6 +60,7 @@ let unapproved_quit =
          Util.originate
            level
            alice.address
+           alice.address
            [bob.address; carol.address]
            None
            stake_amount
@@ -86,6 +88,7 @@ let impersonating_quit =
          Util.originate
            level
            alice.address
+           alice.address
            [bob.address; carol.address]
            None
            100tez
@@ -111,6 +114,7 @@ let keep_alive =
          Util.originate
            level
            alice.address
+           alice.address
            [bob.address; carol.address]
            (Some some_date)
            100tez
@@ -125,6 +129,32 @@ let keep_alive =
        Breath.Result.reduce
           [alice_action; (Util.assert_state contract (fun storage -> storage.last_keep_alive = Tezos.get_now ()))])
 
+let keep_alive_with_session_key =
+  Breath.Model.case
+    "keep_alive"
+    "keep alive from session key resets the clock"
+    (fun (level : Breath.Logger.level) ->
+       let (_, (alice, bob, carol)) = Breath.Context.init_default () in
+       let some_date : timestamp = ("2000-01-01t10:10:10Z" : timestamp) in
+       let contract =
+         Util.originate
+           level
+           alice.address
+           carol.address
+           [bob.address]
+           (Some some_date)
+           100tez
+           in
+       let carol_action =
+         Breath.Context.act_as
+           carol
+           (Util.call
+              contract
+              Keep_alive
+              0mutez) in
+       Breath.Result.reduce
+          [carol_action; (Util.assert_state contract (fun storage -> storage.last_keep_alive = Tezos.get_now ()))])
+
 let add_arbiter =
   Breath.Model.case
     "add_arbiter"
@@ -135,6 +165,7 @@ let add_arbiter =
        let contract =
          Util.originate
            level
+           alice.address
            alice.address
            [bob.address;]
            (Some some_date)
@@ -159,6 +190,7 @@ let add_stake =
        let contract =
          Util.originate
            level
+           alice.address
            alice.address
            [bob.address;]
            None
@@ -185,6 +217,7 @@ let valid_claim =
        let contract =
          Util.originate
            level
+           alice.address
            alice.address
            [bob.address;]
            (Some some_date)
@@ -215,6 +248,7 @@ let invalid_claim =
          Util.originate
            level
            alice.address
+           alice.address
            [bob.address;]
            None
            stake
@@ -237,6 +271,7 @@ let () =
       ; unapproved_quit 
       ; impersonating_quit
       ; keep_alive 
+      ; keep_alive_with_session_key
       ; add_arbiter
       ; add_stake
       ; valid_claim

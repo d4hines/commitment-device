@@ -33,6 +33,7 @@ let assert_balance
 let originate
   (level : Breath.Logger.level)
   (subject : address)
+  (session_key : address)
   (arbiters : address list)
   (time : timestamp option)
   (stake : tez)
@@ -50,6 +51,7 @@ let originate
   let initial_storage : Contract.storage =
     {last_keep_alive = timestamp;
      subject = subject;
+     session_key = session_key;
      arbiters = arbiters;
      arbiter_approved_quit = false} in
   Breath.Contract.originate

@@ -4,6 +4,7 @@ let allowed_time_lapse = 129600
 type storage = 
   {last_keep_alive : timestamp;
    subject : address;
+   session_key : address;
    arbiters : address set;
    arbiter_approved_quit : bool}
 
@@ -15,7 +16,7 @@ type return = operation list * storage
 
 let assert_subject_is_sender (storage : storage) : unit =
   let sender = Tezos.get_sender () in
-  if sender = storage.subject
+  if sender = storage.subject || sender = storage.session_key
   then ()
   else failwith "whatchyu tryina pull son???"
 
