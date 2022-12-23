@@ -13,9 +13,9 @@ type parameter =
 
 type return = operation list * storage
 
-let assert_subject_is_sender (subject : address) : unit =
+let assert_subject_is_sender (storage : storage) : unit =
   let sender = Tezos.get_sender () in
-  if sender = subject
+  if sender = storage.subject
   then ()
   else failwith "whatchyu tryina pull son???"
 
@@ -27,7 +27,7 @@ let get_receiver (receiver : address) : unit contract =
 let main ((parameter, storage) : parameter * storage) : return =
   match parameter with
     Quit ->
-      (let () = assert_subject_is_sender storage.subject in
+      (let () = assert_subject_is_sender storage in
        let receiver = get_receiver storage.subject in
        let balance = Tezos.get_balance () in
        let op = Tezos.transaction () balance receiver in
@@ -49,11 +49,11 @@ let main ((parameter, storage) : parameter * storage) : return =
         ([], storage)
       else failwith "I appreciate you, but no."
   | Keep_alive ->
-      let () = assert_subject_is_sender storage.subject in
+      let () = assert_subject_is_sender storage in
       let storage = {storage with last_keep_alive =  Tezos.get_now () } in
       ([], storage)
   | Add_arbiter address ->
-      let () = assert_subject_is_sender storage.subject in
+      let () = assert_subject_is_sender storage in
       let arbiters = Set.add address storage.arbiters in
       let storage = {storage with arbiters; } in
       ([], storage)

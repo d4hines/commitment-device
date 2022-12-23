@@ -1,4 +1,4 @@
-#import "../src/contract.mligo" "Contract"
+#import "../contract.mligo" "Contract"
 #import "../breathalyzer/lib/lib.mligo" "Breath"
 #import "../breathalyzer/examples/auction/src/auction_sc.mligo" "Auction"
 #import "./util.mligo" "Util"
