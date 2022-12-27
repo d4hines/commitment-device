@@ -10,7 +10,7 @@ type storage =
 
 type parameter =
   Quit | Approve_quit | Keep_alive | Add_arbiter of address
-| Add_stake | Claim_stake
+| Add_stake | Claim_stake | Set_session_key of address
 
 type return = operation list * storage
 
@@ -57,6 +57,10 @@ let main ((parameter, storage) : parameter * storage) : return =
       let () = assert_subject_is_sender storage in
       let arbiters = Set.add address storage.arbiters in
       let storage = {storage with arbiters; } in
+      ([], storage)
+  | Set_session_key address ->
+      let () = assert_subject_is_sender storage in
+      let storage = {storage with session_key = address; } in
       ([], storage)
   | Add_stake -> ([], storage)
   | Claim_stake ->
