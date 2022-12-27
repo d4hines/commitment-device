@@ -1,5 +1,5 @@
-(* 36 hours *)
-let allowed_time_lapse = 129600
+(* 48 hours *)
+let allowed_time_lapse = 172800
 
 type storage = 
   {last_keep_alive : timestamp;
